@@ -42,7 +42,9 @@ namespace Net.Bndy.Web
 				// set actual uri and re-request the uri for getting the final html.
 				if (response.Headers["Location"] != null)
 				{
-					uri = response.Headers["Location"];
+					var url = response.Headers["Location"];
+					url = new Uri(new Uri(uri), url).ToString();
+					uri = url;
 					return Get(ref uri, encoding, proxyHost, proxyPort);
 				}
 				else
