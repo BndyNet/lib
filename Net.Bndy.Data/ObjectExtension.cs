@@ -91,7 +91,7 @@ namespace Net.Bndy.Data
 			var format = "INSERT INTO [{0}]({1}) VALUES('{2}')";
 
 			return string.Format(format, tblName,
-				string.Join(", ", fields), string.Join("', '", values)
+				string.Join(", ", fields), string.Join("', '", values).Replace("'NULL'", "NULL")
 				);
 		}
 
