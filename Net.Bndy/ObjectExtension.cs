@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using Newtonsoft.Json;
 
 namespace Net.Bndy
 {
@@ -19,6 +20,20 @@ namespace Net.Bndy
     /// </summary>
     public static class ObjectExtension
     {
+
+        /// <summary>
+        /// Serialize to json string.
+        /// </summary>
+        /// <param name="obj">The object.</param>
+        /// <returns>a json string</returns>
+        public static string ToJson(this object obj)
+        {
+            return JsonConvert.SerializeObject(obj, new JsonSerializerSettings()
+            {
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+            });
+        }
+
         /// <summary>
         /// Gets dictionary instance that includes all property names and values.
         /// </summary>

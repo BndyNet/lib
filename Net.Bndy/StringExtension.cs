@@ -5,6 +5,7 @@
 // Extensions of String
 // =================================================================================
 
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +16,18 @@ namespace Net.Bndy
 {
 	public static class StringExtension
 	{
+
+		/// <summary>
+		/// Deserializes the specified string.
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="str">The string.</param>
+		/// <returns>T.</returns>
+		public static T Deserialize<T>(this string str)
+		{
+			return JsonConvert.DeserializeObject<T>(str);
+		}
+
 		/// <summary>
 		/// Determines whether the specified string is email.
 		/// </summary>
