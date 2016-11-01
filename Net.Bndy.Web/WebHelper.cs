@@ -9,9 +9,12 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IO;
+using System.IO.Compression;
+using System.Linq;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Web;
 
 namespace Net.Bndy.Web
 {
@@ -153,5 +156,142 @@ namespace Net.Bndy.Web
 
             return destFileName;
         }
+
+        #region Agent
+        /// <summary>
+        /// Response the specified url and replace all links to agent url.
+        /// </summary>
+        /// <param name="requestUrl">The request URL.</param>
+        /// <param name="agentUrl">The agent URL.</param>
+        public static void Agent(string requestUrl, string agentUrl)
+        {
+            if (!string.IsNullOrWhiteSpace(requestUrl) && requestUrl != "/")
+            {
+                var request = (HttpWebRequest)WebRequest.Create(requestUrl);
+                request.Method = "GET";
+                request.Timeout = 10000;
+                request.UserAgent = "Mozilla/5.0";
+                request.Headers.Add("Accept-Encoding", "gzip, deflate");
+
+                using (var response = (HttpWebResponse)request.GetResponse())
+                {
+                    // the following code will lead to the breakdown of response
+                    //foreach (var headerKey in resp.Headers.AllKeys)
+                    //{
+                    //    HttpContext.Current.Response.AppendHeader(headerKey, resp.Headers[headerKey]);
+                    //}
+                    HttpContext.Current.Response.ContentType = response.ContentType;
+
+                    using (System.IO.Stream responseStream = response.GetResponseStream())
+                    {
+                        // write the response stream to MemoryStream
+                        var ms = new MemoryStream();
+                        var buffer = new byte[1024];
+                        var contentBytes = new List<byte>();
+                        var length = 0;
+                        do
+                        {
+                            length = responseStream.Read(buffer, 0, buffer.Length);
+                            contentBytes.AddRange(buffer.Take(length));
+                            ms.Write(buffer.Take(length).ToArray(), 0, length);
+                        } while (length > 0);
+                        ms.Flush();
+
+                        var contentType = response.ContentType.ToLower();
+
+                        if (contentType.StartsWith("text") ||
+                            contentType.IndexOf("javascript") > 0
+                            )
+                        {
+                            // plain text and replace all links in html, css
+
+                            // get the charset from response header
+                            var characterSet = !string.IsNullOrWhiteSpace(response.CharacterSet) && response.CharacterSet != "ISO-8859-1"
+                                ? response.CharacterSet : "utf-8";
+                            if (response.ContentType != null)
+                            {
+                                var codeCharacterSet = Regex.Match(response.ContentType,
+                                    @"(?<=charset=)[\w-]*", RegexOptions.IgnoreCase).Value;
+                                if (!string.IsNullOrWhiteSpace(codeCharacterSet))
+                                {
+                                    characterSet = codeCharacterSet;
+                                }
+                            }
+                            var encoding = Encoding.GetEncoding(characterSet);
+
+                            // decoding using the default charset
+                            var textContent = "";
+                            if (response.ContentEncoding.ToLower() == "gzip")
+                            {
+                                ms.Position = 0;
+                                textContent = new StreamReader(new GZipStream(ms, CompressionMode.Decompress), encoding).ReadToEnd();
+                            }
+                            else
+                            {
+                                ms.Position = 0;
+                                textContent = new StreamReader(ms, encoding).ReadToEnd();
+                            }
+
+                            if (contentType.StartsWith("text/html"))
+                            {
+                                // get the actual encoding from html
+                                var charset = Regex.Match(textContent,
+                                    @"(?<=charset=)[\w\d-]+", RegexOptions.IgnoreCase).Value.ToLower();
+                                // redecoding when the actual encoding is not UTF-8
+                                if (!string.IsNullOrWhiteSpace(charset) && charset != "utf-8")
+                                {
+                                    ms.Position = 0;
+                                    textContent = new StreamReader(ms, Encoding.GetEncoding(charset)).ReadToEnd();
+                                }
+                            }
+
+                            if (contentType.StartsWith("text/html") || contentType.StartsWith("text/css"))
+                            {
+                                textContent = AgentReplaceLinksInHtmlOrCss(textContent, requestUrl, agentUrl);
+                            }
+
+                            HttpContext.Current.Response.Write(textContent);
+                        }
+                        else
+                        {
+                            // other files, like image, font and so on.
+                            HttpContext.Current.Response.BinaryWrite(ms.ToArray());
+                        }
+                    }
+                }
+            }
+        }
+
+        private static string AgentReplaceLinksInHtmlOrCss(string code, string sourceUrl, string destUrl = null)
+        {
+            var patterns = new string[] {
+                // html
+                @"(?<begin>src=[""'])(?<url>[^'""]+?)(?<end>[""'])",
+                @"(?<begin>href=[""'])(?<url>[^'""]+?)(?<end>[""'])",
+                @"(?<begin>action=[""'])(?<url>[^'""]+?)(?<end>[""'])",           
+                // css            
+                @"(?<begin>url\(['""]?)(?<url>[^'""]+?)(?<end>['""]?\))",
+            };
+            foreach (var pattern in patterns)
+            {
+                foreach (Match m in Regex.Matches(code, pattern))
+                {
+                    var url = m.Groups["url"].Value;
+                    if (!string.IsNullOrWhiteSpace(url) && !url.StartsWith(destUrl))
+                    {
+                        try
+                        {
+                            var newUrl = new Uri(new Uri(sourceUrl), url).ToString();
+                            newUrl = destUrl + "?url=" + newUrl;
+                            code = code.Replace(m.Value,
+                                string.Format("{0}{1}{2}", m.Groups["begin"].Value, newUrl, m.Groups["end"].Value));
+                        }
+                        catch { }
+                    }
+                }
+            }
+            return code;
+        }
+        #endregion
     }
 }
