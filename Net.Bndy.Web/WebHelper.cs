@@ -207,7 +207,7 @@ namespace Net.Bndy.Web
 
                             // get the charset from response header
                             var characterSet = !string.IsNullOrWhiteSpace(response.CharacterSet) && response.CharacterSet != "ISO-8859-1"
-                                ? response.CharacterSet : "utf-8";
+                                ? response.CharacterSet : "gbk";
                             if (response.ContentType != null)
                             {
                                 var codeCharacterSet = Regex.Match(response.ContentType,
@@ -217,20 +217,25 @@ namespace Net.Bndy.Web
                                     characterSet = codeCharacterSet;
                                 }
                             }
-                            var encoding = Encoding.GetEncoding(characterSet);
+
+                            Func<string, string> decodeResponse = (charset) =>
+                            {
+                                var encoding = Encoding.GetEncoding(charset);
+                                if (response.ContentEncoding.ToLower() == "gzip")
+                                {
+                                    ms.Position = 0;
+                                    return new StreamReader(new GZipStream(ms, CompressionMode.Decompress), encoding).ReadToEnd();
+                                }
+                                else
+                                {
+                                    ms.Position = 0;
+                                    return new StreamReader(ms, encoding).ReadToEnd();
+                                }
+                            };
 
                             // decoding using the default charset
-                            var textContent = "";
-                            if (response.ContentEncoding.ToLower() == "gzip")
-                            {
-                                ms.Position = 0;
-                                textContent = new StreamReader(new GZipStream(ms, CompressionMode.Decompress), encoding).ReadToEnd();
-                            }
-                            else
-                            {
-                                ms.Position = 0;
-                                textContent = new StreamReader(ms, encoding).ReadToEnd();
-                            }
+                            var textContent = decodeResponse(characterSet);
+                           
 
                             if (contentType.StartsWith("text/html"))
                             {
@@ -240,8 +245,7 @@ namespace Net.Bndy.Web
                                 // redecoding when the actual encoding is not UTF-8
                                 if (!string.IsNullOrWhiteSpace(charset) && charset != "utf-8")
                                 {
-                                    ms.Position = 0;
-                                    textContent = new StreamReader(ms, Encoding.GetEncoding(charset)).ReadToEnd();
+                                    textContent = decodeResponse(charset);
                                 }
                             }
 
