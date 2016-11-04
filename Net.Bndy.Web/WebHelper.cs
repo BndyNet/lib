@@ -226,6 +226,11 @@ namespace Net.Bndy.Web
                                     ms.Position = 0;
                                     return new StreamReader(new GZipStream(ms, CompressionMode.Decompress), encoding).ReadToEnd();
                                 }
+                                else if (response.ContentEncoding.ToLower() == "deflate")
+                                {
+                                    ms.Position = 0;
+                                    return new StreamReader(new DeflateStream(ms, CompressionMode.Decompress), encoding).ReadToEnd();
+                                }
                                 else
                                 {
                                     ms.Position = 0;
@@ -235,7 +240,7 @@ namespace Net.Bndy.Web
 
                             // decoding using the default charset
                             var textContent = decodeResponse(characterSet);
-                           
+
 
                             if (contentType.StartsWith("text/html"))
                             {
