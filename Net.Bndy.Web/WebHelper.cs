@@ -207,7 +207,7 @@ namespace Net.Bndy.Web
 
                             // get the charset from response header
                             var characterSet = !string.IsNullOrWhiteSpace(response.CharacterSet) && response.CharacterSet != "ISO-8859-1"
-                                ? response.CharacterSet : "gbk";
+                                ? response.CharacterSet : "utf-8";
                             if (response.ContentType != null)
                             {
                                 var codeCharacterSet = Regex.Match(response.ContentType,
@@ -252,6 +252,11 @@ namespace Net.Bndy.Web
                                 {
                                     textContent = decodeResponse(charset);
                                 }
+                                textContent = Regex.Replace(textContent, @"charset=[\w-]+", "charset=utf-8");
+                            }
+                            else
+                            {
+                                HttpContext.Current.Response.ContentType = response.ContentType;
                             }
 
                             if (contentType.StartsWith("text/html") || contentType.StartsWith("text/css"))
@@ -259,10 +264,13 @@ namespace Net.Bndy.Web
                                 textContent = AgentReplaceLinksInHtmlOrCss(textContent, requestUrl, agentUrl);
                             }
 
-                            HttpContext.Current.Response.Write(textContent);
+
+                            HttpContext.Current.Response.BinaryWrite(Encoding.UTF8.GetBytes(textContent));
                         }
                         else
                         {
+                            HttpContext.Current.Response.Cache.SetMaxAge(TimeSpan.FromDays(30));
+                            HttpContext.Current.Response.ContentType = response.ContentType;
                             // other files, like image, font and so on.
                             HttpContext.Current.Response.BinaryWrite(ms.ToArray());
                         }
