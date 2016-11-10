@@ -11,7 +11,7 @@ using System.Web.Mvc;
 
 namespace Net.Bndy.Web.MVC
 {
-    public class JsonNetResult : JsonResult
+    public class JsonNetResult : System.Web.Mvc.JsonResult
     {
         /// <summary>
         /// Enables processing of the result of an action method by a custom type that inherits from the <see cref="T:System.Web.Mvc.ActionResult" /> class.

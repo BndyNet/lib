@@ -85,7 +85,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="HtmlExtensions.cs" />
+    <Compile Include="MVC\HtmlHelperExtensions.cs" />
+    <Compile Include="AjaxResult.cs" />
     <Compile Include="MVC\ControllerBase.cs" />
     <Compile Include="MVC\JsonNetResult.cs" />
     <Compile Include="MVC\UrlHelperExtensions.cs" />

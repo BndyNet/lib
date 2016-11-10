@@ -11,9 +11,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Net.Bndy.Web
+namespace Net.Bndy.Web.MVC
 {
-	public static class HtmlExtensions
+	public static class HtmlHelperExtensions
 	{
 		/// <summary>
 		/// Displays a drop down list according to the specific Enum type.
