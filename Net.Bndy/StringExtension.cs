@@ -152,5 +152,25 @@ namespace Net.Bndy
 		{
 			return string.Format(format, args.ToArray());
 		}
+
+		/// <summary>
+		/// Gets the PinYin
+		/// </summary>
+		/// <param name="str">The Chinese Characters.</param>
+		/// <returns>PinYin</returns>
+		public static string GetPinYin(this string str)
+		{
+			return PinYinConverter.Get(str);
+		}
+
+		/// <summary>
+		/// Gets the first letter of PinYin
+		/// </summary>
+		/// <param name="str">The Chinese Characters</param>
+		/// <returns>Letters</returns>
+		public static string GetFirstLetterOfPinYin(this string str)
+		{
+			return PinYinConverter.GetFirst(str);
+		}
 	}
 }
