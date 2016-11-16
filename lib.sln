@@ -1,15 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Net.Bndy", "Net.Bndy\Net.Bndy.csproj", "{C7B30AAB-8A3C-4B5C-86E2-28FD15254C24}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Net.Bndy.ActivityLib", "Net.Bndy.ActivityLib\Net.Bndy.ActivityLib.csproj", "{9D33CB04-0902-419A-AE4D-D1F60A58904E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Net.Bndy.Data", "Net.Bndy.Data\Net.Bndy.Data.csproj", "{3A11CB93-33F8-4BEF-87F7-67CBE5A211E0}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Net.Bndy.Entities", "Net.Bndy.Entities\Net.Bndy.Entities.csproj", "{2AB78AE8-E82E-415B-A5BB-BBDA4871FAA7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Net.Bndy.EntityFramework", "Net.Bndy.EntityFramework\Net.Bndy.EntityFramework.csproj", "{6977B4BC-E992-45E5-8D13-818D16670CB4}"
 EndProject
@@ -21,35 +19,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Net.Bndy.Web", "Net.Bndy.We
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Net.Bndy.Windows", "Net.Bndy.Windows\Net.Bndy.Windows.csproj", "{F9CBAA78-269F-43F0-91CD-71CDD76EDBC4}"
 EndProject
-Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "Net.Bndy.Javascript", "http://localhost:6376", "{50B9405F-C225-4901-BA84-0A052DF1867F}"
-	ProjectSection(WebsiteProperties) = preProject
-		UseIISExpress = "true"
-		TargetFrameworkMoniker = ".NETFramework,Version%3Dv2.0"
-		Debug.AspNetCompiler.VirtualPath = "/localhost_6376"
-		Debug.AspNetCompiler.PhysicalPath = "Net.Bndy.Javascript\"
-		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_6376\"
-		Debug.AspNetCompiler.Updateable = "true"
-		Debug.AspNetCompiler.ForceOverwrite = "true"
-		Debug.AspNetCompiler.FixedNames = "false"
-		Debug.AspNetCompiler.Debug = "True"
-		Release.AspNetCompiler.VirtualPath = "/localhost_6376"
-		Release.AspNetCompiler.PhysicalPath = "Net.Bndy.Javascript\"
-		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_6376\"
-		Release.AspNetCompiler.Updateable = "true"
-		Release.AspNetCompiler.ForceOverwrite = "true"
-		Release.AspNetCompiler.FixedNames = "false"
-		Release.AspNetCompiler.Debug = "False"
-		SlnRelativePath = "Net.Bndy.Javascript\"
-	EndProjectSection
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "dll", "dll", "{531A894E-B24C-4BB1-821D-504AF8DA9517}"
 	ProjectSection(SolutionItems) = preProject
 		dll\Microsoft.Office.Interop.Word.dll = dll\Microsoft.Office.Interop.Word.dll
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Net.Bndy.SearchEngines", "Net.Bndy.SearchEngines\Net.Bndy.SearchEngines.csproj", "{E916ED15-726E-46E2-A1B9-4A8950C56363}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Net.Bndy.Log", "Net.Bndy.Log\Net.Bndy.Log.csproj", "{C56EBD24-4B36-4122-98D6-5BD977D93C36}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -62,23 +37,17 @@ Global
 		{C7B30AAB-8A3C-4B5C-86E2-28FD15254C24}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C7B30AAB-8A3C-4B5C-86E2-28FD15254C24}.Release|Any CPU.Build.0 = Release|Any CPU
 		{9D33CB04-0902-419A-AE4D-D1F60A58904E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9D33CB04-0902-419A-AE4D-D1F60A58904E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9D33CB04-0902-419A-AE4D-D1F60A58904E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9D33CB04-0902-419A-AE4D-D1F60A58904E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3A11CB93-33F8-4BEF-87F7-67CBE5A211E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{3A11CB93-33F8-4BEF-87F7-67CBE5A211E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3A11CB93-33F8-4BEF-87F7-67CBE5A211E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3A11CB93-33F8-4BEF-87F7-67CBE5A211E0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2AB78AE8-E82E-415B-A5BB-BBDA4871FAA7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2AB78AE8-E82E-415B-A5BB-BBDA4871FAA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2AB78AE8-E82E-415B-A5BB-BBDA4871FAA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2AB78AE8-E82E-415B-A5BB-BBDA4871FAA7}.Release|Any CPU.Build.0 = Release|Any CPU
 		{6977B4BC-E992-45E5-8D13-818D16670CB4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{6977B4BC-E992-45E5-8D13-818D16670CB4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6977B4BC-E992-45E5-8D13-818D16670CB4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6977B4BC-E992-45E5-8D13-818D16670CB4}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C56C0FE2-CF7E-4B92-BAFA-6EC9508455B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C56C0FE2-CF7E-4B92-BAFA-6EC9508455B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C56C0FE2-CF7E-4B92-BAFA-6EC9508455B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C56C0FE2-CF7E-4B92-BAFA-6EC9508455B4}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B7D2A614-51AC-4C8F-97F1-01987F849334}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -95,18 +64,10 @@ Global
 		{F9CBAA78-269F-43F0-91CD-71CDD76EDBC4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F9CBAA78-269F-43F0-91CD-71CDD76EDBC4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F9CBAA78-269F-43F0-91CD-71CDD76EDBC4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{50B9405F-C225-4901-BA84-0A052DF1867F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{50B9405F-C225-4901-BA84-0A052DF1867F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{50B9405F-C225-4901-BA84-0A052DF1867F}.Release|Any CPU.ActiveCfg = Debug|Any CPU
-		{50B9405F-C225-4901-BA84-0A052DF1867F}.Release|Any CPU.Build.0 = Debug|Any CPU
 		{E916ED15-726E-46E2-A1B9-4A8950C56363}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E916ED15-726E-46E2-A1B9-4A8950C56363}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E916ED15-726E-46E2-A1B9-4A8950C56363}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E916ED15-726E-46E2-A1B9-4A8950C56363}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C56EBD24-4B36-4122-98D6-5BD977D93C36}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C56EBD24-4B36-4122-98D6-5BD977D93C36}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C56EBD24-4B36-4122-98D6-5BD977D93C36}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C56EBD24-4B36-4122-98D6-5BD977D93C36}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
