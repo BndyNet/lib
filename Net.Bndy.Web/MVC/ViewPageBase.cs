@@ -12,4 +12,8 @@ namespace Net.Bndy.Web.MVC
     {
 
     }
+    public abstract class ViewPageBase<TModel> : System.Web.Mvc.WebViewPage<TModel>
+    {
+
+    }
 }
