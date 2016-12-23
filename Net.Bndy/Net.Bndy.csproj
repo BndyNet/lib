@@ -59,7 +59,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Attributes.cs" />
     <Compile Include="CollectionExtension.cs" />
     <Compile Include="ConfigurationAttribute.cs" />
     <Compile Include="DataRowExtension.cs" />

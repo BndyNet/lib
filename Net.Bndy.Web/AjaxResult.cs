@@ -18,6 +18,11 @@ namespace Net.Bndy.Web
 
         public object ExtraData { get; set; }
 
+        public AjaxResult()
+        {
+
+        }
+
         public AjaxResult(object data)
         {
             this.Status = AjaxResultStatus.OK;

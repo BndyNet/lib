@@ -10,70 +10,77 @@ using System.Reflection;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Web;
+using System.ComponentModel.DataAnnotations;
 
 namespace Net.Bndy.Web.MVC
 {
-	public static class HtmlHelperExtensions
-	{
-		/// <summary>
-		/// Displays a drop down list according to the specific Enum type.
-		///		Each enum item should declare the <see cref="Net.Bndy.DisplayAttribute"/> attribute so that the exact information is been display in drop down list.
-		/// </summary>
-		/// <typeparam name="TEnum">The type of Enum</typeparam>
-		/// <param name="htmlHelper">The instance of <see cref="System.Web.Mvc.HtmlHelper"/></param>
-		/// <param name="defaultValue">Default value of drop down list</param>
-		/// <param name="htmlAttributes">Html attributes of drop down list</param>
-		/// <returns></returns>
-		public static string DisplayEnum<TEnum>(this System.Web.Mvc.HtmlHelper htmlHelper,
-			Nullable<TEnum> defaultValue = null,
-			object htmlAttributes = null)
-			where TEnum : struct
-		{
-			StringBuilder result = new StringBuilder();
-			DisplayAttribute attr = null;
-			List<string> lstAttr = new List<string>();
+    public static class HtmlHelperExtensions
+    {
+        /// <summary>
+        /// Displays the enum.
+        /// </summary>
+        /// <param name="htmlHelper">The HTML helper.</param>
+        /// <param name="enumItem">The enum item.</param>
+        /// <returns>System.String.</returns>
+        public static HtmlString DisplayEnum(this System.Web.Mvc.HtmlHelper htmlHelper, object enumItem)
+        {
+            foreach (var item in enumItem.GetType().GetFields(BindingFlags.Public | BindingFlags.Static))
+            {
+                if ((int)(item.GetValue(null)) == (int)enumItem)
+                {
+                    var displayAttr = (DisplayAttribute)item.GetCustomAttribute(typeof(DisplayAttribute));
+                    var label = displayAttr != null ? displayAttr.Name : enumItem.ToString();
+                    return new HtmlString(label);
+                }
+            }
+            return new HtmlString(enumItem.ToString());
+        }
 
-			if (htmlAttributes != null)
-			{
-				foreach (var item in htmlAttributes.GetType().GetProperties())
-				{
-					lstAttr.Add(string.Format("{0}=\"{1}\"", item.Name, item.GetValue(htmlAttributes, null)));
-				}
-			}
 
-			result.AppendFormat("<select id=\"{0}\" name=\"{0}\" {1}>", typeof(TEnum), string.Join(" ", lstAttr.ToArray()));
-			if (defaultValue == null)
-				result.AppendFormat("<option value=\"\">Select one...</option>");
+        /// <summary>
+        /// Renders a drop down list for Enum type.
+        /// </summary>
+        /// <param name="htmlHelper">The HTML helper.</param>
+        /// <param name="itemOrType">The enum type or item.</param>
+        /// <param name="htmlAttributes">The HTML attributes.</param>
+        /// <param name="caption">The caption.</param>
+        /// <returns>HtmlString.</returns>
+        public static HtmlString DropDownEnum(this System.Web.Mvc.HtmlHelper htmlHelper, object itemOrType,
+            object htmlAttributes = null, string caption = null)
+        {
+            var attrs = new List<string>();
+            if (htmlAttributes != null)
+            {
+                foreach (var p in htmlAttributes.GetType().GetProperties())
+                {
+                    attrs.Add(string.Format(@"{0}=""{1}""", p.Name, p.GetValue(htmlAttributes)));
+                }
+            }
 
-			foreach (var item in typeof(TEnum).GetFields(BindingFlags.Public | BindingFlags.Static))
-			{
-				object[] attrs = item.GetCustomAttributes(typeof(DisplayAttribute), false);
-				string title = string.Empty;
-				string description = string.Empty;
-				string value = string.Empty;
+            var html = new StringBuilder();
+            html.AppendFormat(@"<select {0}>", string.Join(" ", attrs));
 
-				if (attrs != null && attrs.Count() > 0)
-				{
-					attr = (DisplayAttribute)attrs[0];
-					title = attr.Title;
-					description = attr.Description;
-				}
-				else
-				{
-					title = item.Name;
-					description = item.Name;
-				}
-				value = ((int)item.GetValue(null)).ToString();
+            if (!string.IsNullOrWhiteSpace(caption))
+            {
+                html.AppendFormat(@"<option value="""" selected>{0}</option>", caption);
+            }
 
-				result.AppendFormat("<option value=\"{0}\" title=\"{1}\"{3}>{2}</option>",
-					value, description, title,
-					defaultValue != null && defaultValue.Value.ToString() == item.Name ? " selected=\"selected\"" : string.Empty);
+            var enumType = itemOrType.GetType().IsValueType ? itemOrType.GetType() : (Type)itemOrType;
+            int? selectedValue = null;
+            if (itemOrType.GetType().IsValueType)
+            {
+                selectedValue = (int)itemOrType;
+            }
+            foreach (var item in enumType.GetFields(BindingFlags.Public | BindingFlags.Static))
+            {
+                var displayAttr = (DisplayAttribute)(item.GetCustomAttribute(typeof(DisplayAttribute), false));
+                var val = (int)item.GetValue(null);
+                html.AppendFormat(@"<option value=""{0}"" {2}>{1}</option>", val, displayAttr != null ? displayAttr.Name : item.Name, val == selectedValue ? "selected" : "");
+            }
+            html.AppendFormat("</select>");
 
-			}
-
-			result.AppendFormat("</select>");
-
-			return result.ToString();
-		}
-	}
+            return new HtmlString(html.ToString());
+        }
+    }
 }

@@ -5,6 +5,7 @@
 // Summary
 // =================================================================================
 
+using System;
 using System.Web.Mvc;
 
 namespace Net.Bndy.Web.MVC
@@ -25,6 +26,48 @@ namespace Net.Bndy.Web.MVC
             {
                 Data = data,
                 JsonRequestBehavior = behavior,
+            };
+        }
+
+        /// <summary>
+        /// Returns an AjaxResult json string about OK.
+        /// </summary>
+        /// <param name="data">The data.</param>
+        /// <returns>JsonNetResult.</returns>
+        protected JsonNetResult AjaxOK(object data)
+        {
+            return AjaxResult(AjaxResultStatus.OK, null, data, null);
+        }
+        /// <summary>
+        /// Returns an AjaxResult json string about error.
+        /// </summary>
+        /// <param name="ex">The ex.</param>
+        /// <returns>JsonNetResult.</returns>
+        protected JsonNetResult AjaxError(Exception ex)
+        {
+            return AjaxResult(AjaxResultStatus.Error, ex.Message, ex, null);
+        }
+        /// <summary>
+        /// Returns an AjaxResult json string about error.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        /// <returns>JsonNetResult.</returns>
+        protected JsonNetResult AjaxError(string message)
+        {
+            return AjaxResult(AjaxResultStatus.Error, message);
+        }
+        protected JsonNetResult AjaxResult(AjaxResultStatus status, string message, object data = null, object extraData = null)
+        {
+            return new JsonNetResult
+            {
+                Data = new AjaxResult
+                {
+                    Data = data,
+                    ExtraData = extraData,
+                    Message = message,
+                    Status = status,
+                },
+                JsonRequestBehavior = JsonRequestBehavior.AllowGet
             };
         }
     }
