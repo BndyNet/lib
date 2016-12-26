@@ -45,6 +45,7 @@ namespace Net.Bndy.Web
     public enum AjaxResultStatus
     {
         OK = 200,
+        Unauthorized = -401,
         Error = 500,
     }
 }
