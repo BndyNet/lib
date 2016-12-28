@@ -34,7 +34,7 @@ namespace Net.Bndy.Web.MVC
         /// </summary>
         /// <param name="data">The data.</param>
         /// <returns>JsonNetResult.</returns>
-        protected JsonNetResult AjaxOK(object data)
+        protected JsonNetResult AjaxOK(object data = null)
         {
             return AjaxResult(AjaxResultStatus.OK, null, data, null);
         }
@@ -52,7 +52,7 @@ namespace Net.Bndy.Web.MVC
         /// </summary>
         /// <param name="message">The message.</param>
         /// <returns>JsonNetResult.</returns>
-        protected JsonNetResult AjaxError(string message)
+        protected JsonNetResult AjaxError(string message = null)
         {
             return AjaxResult(AjaxResultStatus.Error, message);
         }
