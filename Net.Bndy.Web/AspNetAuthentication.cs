@@ -19,9 +19,7 @@ namespace Net.Bndy.Web
 {
     public class AspNetAuthentication
     {
-        private static bool _enable;
-        public HttpContextBase HttpContext { private set; get; }
-
+        public static bool Enabled { private set; get; }
         public static void Enable(IAppBuilder app, string loginUrl = null)
         {
             app.UseCookieAuthentication(new Microsoft.Owin.Security.Cookies.CookieAuthenticationOptions
@@ -29,27 +27,70 @@ namespace Net.Bndy.Web
                 AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie,
                 LoginPath = new PathString(loginUrl)
             });
-            _enable = true;
+            Enabled = true;
         }
+    }
+    public class AspNetAuthentication<TUser, TRole>
+        where TUser : IdentityUser
+        where TRole : IdentityRole, new()
+    {
 
-        public AspNetAuthentication(HttpContextBase httpContext)
+        public HttpContextBase HttpContext { private set; get; }
+        public IdentityDbContext DbContext { private set; get; }
+
+        public UserStore<TUser> UserStore
         {
-            HttpContext = httpContext;
-
-            if (!_enable)
+            get
             {
-                throw new Exception($"Please use {nameof(AspNetAuthentication)}.{ nameof(AspNetAuthentication.Enable)} method to enable {nameof(AspNetAuthentication)}.");
+                return DbContext == null ? new UserStore<TUser>() : new UserStore<TUser>(DbContext);
+            }
+        }
+        public UserManager<TUser> UserManager
+        {
+            get
+            {
+                return new UserManager<TUser>(UserStore);
+            }
+        }
+        public RoleStore<TRole> RoleStore
+        {
+            get
+            {
+                return DbContext == null ? new RoleStore<TRole>() : new RoleStore<TRole>(DbContext);
+            }
+        }
+        public RoleManager<TRole> RoleManager
+        {
+            get
+            {
+                return new RoleManager<TRole>(RoleStore);
             }
         }
 
-        public void CreateUser(IdentityUser user, string password)
+
+        public AspNetAuthentication(HttpContextBase httpContext, IdentityDbContext dbContext = null)
         {
-            var userStore = new UserStore<IdentityUser>();
-            var userManager = new UserManager<IdentityUser>(userStore);
+            if (!AspNetAuthentication.Enabled)
+            {
+                throw new Exception($"Please use `AspNetAuthentication.Enable` method to enable AspNetAuthentication.");
+            }
 
-            user.PasswordHash = userManager.PasswordHasher.HashPassword(password);
+            HttpContext = httpContext;
+            DbContext = dbContext;
+        }
 
-            var createdResult = userManager.Create(user);
+        public void CreateRole(TRole role)
+        {
+            var createdResult = RoleManager.Create(role);
+            if (!createdResult.Succeeded)
+            {
+                throw new Exception(string.Join(",", createdResult.Errors));
+            }
+        }
+
+        public void CreateUser(TUser user, string password)
+        {
+            var createdResult = UserManager.Create(user, password);
 
             if (!createdResult.Succeeded)
             {
@@ -57,23 +98,18 @@ namespace Net.Bndy.Web
             }
         }
 
-        public IQueryable<IdentityUser> GetUsers()
+        public IQueryable<TUser> GetUsers()
         {
-            var userStore = new UserStore<IdentityUser>();
-            var userManager = new UserManager<IdentityUser>(userStore);
-            return userStore.Users;
+            return UserStore.Users;
         }
 
         public ClaimsIdentity SignIn(string username, string password)
         {
-            var userStore = new UserStore<IdentityUser>();
-            var userManager = new UserManager<IdentityUser>(userStore);
-
-            var u = userManager.Find(username, password);
+            var u = UserManager.Find(username, password);
             if (u != null)
             {
                 var authManager = HttpContext.GetOwinContext().Authentication;
-                var identity = userManager.CreateIdentity(u, DefaultAuthenticationTypes.ApplicationCookie);
+                var identity = UserManager.CreateIdentity(u, DefaultAuthenticationTypes.ApplicationCookie);
 
                 authManager.SignIn(new Microsoft.Owin.Security.AuthenticationProperties
                 {
