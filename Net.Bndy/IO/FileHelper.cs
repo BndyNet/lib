@@ -36,5 +36,24 @@ namespace Net.Bndy.IO
 				file.CopyTo(destName, overwrite);
 			}
 		}
+
+
+		public static string[] ImageExtensionNames = new string[] { ".jpg", ".jpeg", ".ico", ".png", ".gif", ".bmp" };
+		/// <summary>
+		/// Determines whether the specified file name is an image file.
+		/// </summary>
+		/// <param name="fileName">Name of the file.</param>
+		/// <returns><c>true</c> if the specified file name is an image file; otherwise, <c>false</c>.</returns>
+		public static bool IsImageFile(string fileName)
+		{
+			foreach (var ext in ImageExtensionNames)
+			{
+				if (fileName.ToLower().IndexOf(ext) > 0)
+				{
+					return true;
+				}
+			}
+			return false;
+		}
 	}
 }
