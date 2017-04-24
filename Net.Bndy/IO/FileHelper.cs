@@ -38,7 +38,7 @@ namespace Net.Bndy.IO
 		}
 
 
-		public static string[] ImageExtensionNames = new string[] { ".jpg", ".jpeg", ".ico", ".png", ".gif", ".bmp" };
+		public static string[] ImageExtensionNames = new string[] { ".jpg", ".jpeg", ".ico", ".png", ".gif", ".bmp", ".tif" };
 		/// <summary>
 		/// Determines whether the specified file name is an image file.
 		/// </summary>
