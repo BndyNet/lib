@@ -70,6 +70,7 @@
     <Compile Include="DictionaryExtension.cs" />
     <Compile Include="EnumHelper.cs" />
     <Compile Include="ExceptionHelper.cs" />
+    <Compile Include="IO\FileType.cs" />
     <Compile Include="IEnumerableExtension.cs" />
     <Compile Include="IO\FileHelper.cs" />
     <Compile Include="IO\StringHelper.cs" />
